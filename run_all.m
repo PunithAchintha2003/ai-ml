@@ -90,6 +90,5 @@ fprintf('  - feature_boxplots.png\n');
 fprintf('  - confusion_matrix.png\n');
 fprintf('  - FAR_FRR_curve.png\n');
 fprintf('  - TAR_vs_FAR.png\n');
-fprintf('\n✓ Ready for coursework submission!\n');
 fprintf('============================================================\n');
 
