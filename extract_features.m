@@ -1,8 +1,13 @@
 function extract_features()
 %% EXTRACT_FEATURES - Extract time and frequency domain features
 % =========================================================================
-% This function segments preprocessed accelerometer signals into windows
+% This function segments preprocessed sensor signals into windows
 % and computes comprehensive features for user authentication.
+%
+% Supports three modalities:
+%   1. Accelerometer only
+%   2. Gyroscope only
+%   3. Combined (accelerometer + gyroscope)
 %
 % Features computed (per window):
 %   Time Domain:
@@ -21,20 +26,26 @@ function extract_features()
 %     - Mean, Std, Energy of magnitude signal
 %
 % Window Configuration:
-%   - Window size: 2 seconds
+%   - Window size: 4 seconds (per requirements)
 %   - Overlap: 50%
 %
 % Output:
-%   - results/featuresTable.mat containing feature matrix and labels
+%   - results/features_day1_accel.mat
+%   - results/features_day1_gyro.mat
+%   - results/features_day1_combined.mat
+%   - results/features_day2_accel.mat
+%   - results/features_day2_gyro.mat
+%   - results/features_day2_combined.mat
 %
 % Reference: [2] Wang et al., 2016 - Deep Learning for Sensor-based Activity Recognition
 % =========================================================================
 
     fprintf('Loading preprocessed data...\n');
-    load('results/preprocessed.mat', 'allData', 'userLabels', 'samplingRate');
+    load('results/preprocessed.mat', 'day1_accel', 'day1_gyro', 'day2_accel', 'day2_gyro', ...
+         'userLabels_day1', 'userLabels_day2', 'samplingRate');
     
-    % Window parameters
-    windowSize = 2.0; % seconds
+    % Window parameters (4 seconds per requirements)
+    windowSize = 4.0; % seconds
     overlap = 0.5; % 50% overlap
     windowSamples = round(windowSize * samplingRate);
     stepSamples = round(windowSamples * (1 - overlap));
@@ -42,31 +53,86 @@ function extract_features()
     fprintf('Window size: %.1f seconds (%d samples)\n', windowSize, windowSamples);
     fprintf('Overlap: %.0f%% (step: %d samples)\n', overlap*100, stepSamples);
     
-    % Initialize feature storage
+    %% Extract features for all combinations
+    % Day 1 - Accelerometer only
+    fprintf('\n=== Extracting Day 1 - Accelerometer Features ===\n');
+    [features_d1_accel, labels_d1_accel, names_accel] = extractModalityFeatures(...
+        day1_accel, userLabels_day1, windowSamples, stepSamples, samplingRate, 'Accel');
+    save('results/features_day1_accel.mat', 'features_d1_accel', 'labels_d1_accel', 'names_accel');
+    fprintf('✓ Saved features_day1_accel.mat\n');
+    
+    % Day 1 - Gyroscope only
+    fprintf('\n=== Extracting Day 1 - Gyroscope Features ===\n');
+    [features_d1_gyro, labels_d1_gyro, names_gyro] = extractModalityFeatures(...
+        day1_gyro, userLabels_day1, windowSamples, stepSamples, samplingRate, 'Gyro');
+    save('results/features_day1_gyro.mat', 'features_d1_gyro', 'labels_d1_gyro', 'names_gyro');
+    fprintf('✓ Saved features_day1_gyro.mat\n');
+    
+    % Day 1 - Combined
+    fprintf('\n=== Extracting Day 1 - Combined Features ===\n');
+    [features_d1_combined, labels_d1_combined, names_combined] = extractCombinedFeatures(...
+        day1_accel, day1_gyro, userLabels_day1, windowSamples, stepSamples, samplingRate);
+    save('results/features_day1_combined.mat', 'features_d1_combined', 'labels_d1_combined', 'names_combined');
+    fprintf('✓ Saved features_day1_combined.mat\n');
+    
+    % Day 2 - Accelerometer only
+    fprintf('\n=== Extracting Day 2 - Accelerometer Features ===\n');
+    [features_d2_accel, labels_d2_accel, ~] = extractModalityFeatures(...
+        day2_accel, userLabels_day2, windowSamples, stepSamples, samplingRate, 'Accel');
+    save('results/features_day2_accel.mat', 'features_d2_accel', 'labels_d2_accel', 'names_accel');
+    fprintf('✓ Saved features_day2_accel.mat\n');
+    
+    % Day 2 - Gyroscope only
+    fprintf('\n=== Extracting Day 2 - Gyroscope Features ===\n');
+    [features_d2_gyro, labels_d2_gyro, ~] = extractModalityFeatures(...
+        day2_gyro, userLabels_day2, windowSamples, stepSamples, samplingRate, 'Gyro');
+    save('results/features_day2_gyro.mat', 'features_d2_gyro', 'labels_d2_gyro', 'names_gyro');
+    fprintf('✓ Saved features_day2_gyro.mat\n');
+    
+    % Day 2 - Combined
+    fprintf('\n=== Extracting Day 2 - Combined Features ===\n');
+    [features_d2_combined, labels_d2_combined, ~] = extractCombinedFeatures(...
+        day2_accel, day2_gyro, userLabels_day2, windowSamples, stepSamples, samplingRate);
+    save('results/features_day2_combined.mat', 'features_d2_combined', 'labels_d2_combined', 'names_combined');
+    fprintf('✓ Saved features_day2_combined.mat\n');
+    
+    % Summary
+    fprintf('\n=================================================\n');
+    fprintf('FEATURE EXTRACTION SUMMARY\n');
+    fprintf('=================================================\n');
+    fprintf('Day 1 - Accelerometer: %d windows, %d features\n', size(features_d1_accel, 1), size(features_d1_accel, 2));
+    fprintf('Day 1 - Gyroscope: %d windows, %d features\n', size(features_d1_gyro, 1), size(features_d1_gyro, 2));
+    fprintf('Day 1 - Combined: %d windows, %d features\n', size(features_d1_combined, 1), size(features_d1_combined, 2));
+    fprintf('Day 2 - Accelerometer: %d windows, %d features\n', size(features_d2_accel, 1), size(features_d2_accel, 2));
+    fprintf('Day 2 - Gyroscope: %d windows, %d features\n', size(features_d2_gyro, 1), size(features_d2_gyro, 2));
+    fprintf('Day 2 - Combined: %d windows, %d features\n', size(features_d2_combined, 1), size(features_d2_combined, 2));
+    fprintf('=================================================\n');
+end
+
+function [allFeatures, allLabels, featureNames] = extractModalityFeatures(dataCell, userLabels, windowSamples, stepSamples, fs, sensorType)
+%% Extract features from single modality (accelerometer or gyroscope)
     allFeatures = [];
     allLabels = [];
     
-    % Process each user's data
-    for fileIdx = 1:length(allData)
-        accelData = allData{fileIdx};
+    for fileIdx = 1:length(dataCell)
+        sensorData = dataCell{fileIdx};
         userID = userLabels(fileIdx);
-        numSamples = size(accelData, 1);
+        numSamples = size(sensorData, 1);
         
-        fprintf('Extracting features from User %d file %d... ', userID, fileIdx);
+        fprintf('  User %d: ', userID);
         
-        % Sliding window segmentation
         windowCount = 0;
         for startIdx = 1:stepSamples:(numSamples - windowSamples + 1)
             endIdx = startIdx + windowSamples - 1;
             
             % Extract window
-            window = accelData(startIdx:endIdx, :);
+            window = sensorData(startIdx:endIdx, :);
             x = window(:, 1);
             y = window(:, 2);
             z = window(:, 3);
             
             % Compute features
-            features = computeWindowFeatures(x, y, z, samplingRate);
+            features = computeWindowFeatures(x, y, z, fs);
             
             % Store
             allFeatures = [allFeatures; features];
@@ -74,32 +140,58 @@ function extract_features()
             windowCount = windowCount + 1;
         end
         
-        fprintf('✓ Extracted %d windows\n', windowCount);
+        fprintf('%d windows\n', windowCount);
     end
     
-    % Create feature table
-    featureNames = generateFeatureNames();
-    featuresTable = array2table(allFeatures, 'VariableNames', featureNames);
-    featuresTable.UserID = allLabels;
+    % Generate feature names
+    featureNames = generateFeatureNames(sensorType);
     
-    % Summary
-    fprintf('\n--- Feature Extraction Summary ---\n');
-    fprintf('Total windows: %d\n', size(allFeatures, 1));
-    fprintf('Features per window: %d\n', size(allFeatures, 2));
-    fprintf('Users: %d\n', length(unique(allLabels)));
+    fprintf('  Total: %d windows, %d features per window\n', size(allFeatures, 1), size(allFeatures, 2));
+end
+
+function [allFeatures, allLabels, featureNames] = extractCombinedFeatures(accelCell, gyroCell, userLabels, windowSamples, stepSamples, fs)
+%% Extract features from combined accelerometer + gyroscope data
+    allFeatures = [];
+    allLabels = [];
     
-    % Display class distribution
-    fprintf('\nClass distribution:\n');
-    uniqueUsers = unique(allLabels);
-    for i = 1:length(uniqueUsers)
-        userID = uniqueUsers(i);
-        count = sum(allLabels == userID);
-        fprintf('  User %d: %d windows (%.1f%%)\n', userID, count, 100*count/length(allLabels));
+    for fileIdx = 1:length(accelCell)
+        accelData = accelCell{fileIdx};
+        gyroData = gyroCell{fileIdx};
+        userID = userLabels(fileIdx);
+        numSamples = min(size(accelData, 1), size(gyroData, 1));
+        
+        fprintf('  User %d: ', userID);
+        
+        windowCount = 0;
+        for startIdx = 1:stepSamples:(numSamples - windowSamples + 1)
+            endIdx = startIdx + windowSamples - 1;
+            
+            % Extract windows
+            accelWindow = accelData(startIdx:endIdx, :);
+            gyroWindow = gyroData(startIdx:endIdx, :);
+            
+            % Compute features for both
+            accelFeatures = computeWindowFeatures(accelWindow(:,1), accelWindow(:,2), accelWindow(:,3), fs);
+            gyroFeatures = computeWindowFeatures(gyroWindow(:,1), gyroWindow(:,2), gyroWindow(:,3), fs);
+            
+            % Concatenate
+            features = [accelFeatures, gyroFeatures];
+            
+            % Store
+            allFeatures = [allFeatures; features];
+            allLabels = [allLabels; userID];
+            windowCount = windowCount + 1;
+        end
+        
+        fprintf('%d windows\n', windowCount);
     end
     
-    % Save features
-    save('results/featuresTable.mat', 'featuresTable', 'allFeatures', 'allLabels', 'featureNames');
-    fprintf('\nFeatures saved to results/featuresTable.mat\n');
+    % Generate combined feature names
+    accelNames = generateFeatureNames('Accel');
+    gyroNames = generateFeatureNames('Gyro');
+    featureNames = [accelNames, gyroNames];
+    
+    fprintf('  Total: %d windows, %d features per window\n', size(allFeatures, 1), size(allFeatures, 2));
 end
 
 function features = computeWindowFeatures(x, y, z, fs)
@@ -173,7 +265,7 @@ function features = computeWindowFeatures(x, y, z, fs)
     features = features(:)';
 end
 
-function featureNames = generateFeatureNames()
+function featureNames = generateFeatureNames(sensorType)
 %% GENERATE_FEATURE_NAMES - Create descriptive names for all features
 % =========================================================================
     
@@ -185,7 +277,7 @@ function featureNames = generateFeatureNames()
                        'Median', 'Range', 'IQR', 'RMS', 'ZCR'};
     for axis = axes
         for feat = timeDomainFeats
-            featureNames{end+1} = sprintf('%s_%s', feat{1}, axis{1});
+            featureNames{end+1} = sprintf('%s_%s_%s', sensorType, feat{1}, axis{1});
         end
     end
     
@@ -193,18 +285,18 @@ function featureNames = generateFeatureNames()
     freqDomainFeats = {'DomFreq', 'SpecEntropy', 'Energy'};
     for axis = axes
         for feat = freqDomainFeats
-            featureNames{end+1} = sprintf('%s_%s', feat{1}, axis{1});
+            featureNames{end+1} = sprintf('%s_%s_%s', sensorType, feat{1}, axis{1});
         end
     end
     
     % Cross-axis correlation
-    featureNames{end+1} = 'Corr_XY';
-    featureNames{end+1} = 'Corr_XZ';
-    featureNames{end+1} = 'Corr_YZ';
+    featureNames{end+1} = sprintf('%s_Corr_XY', sensorType);
+    featureNames{end+1} = sprintf('%s_Corr_XZ', sensorType);
+    featureNames{end+1} = sprintf('%s_Corr_YZ', sensorType);
     
     % Magnitude features
-    featureNames{end+1} = 'Mag_Mean';
-    featureNames{end+1} = 'Mag_Std';
-    featureNames{end+1} = 'Mag_Energy';
+    featureNames{end+1} = sprintf('%s_Mag_Mean', sensorType);
+    featureNames{end+1} = sprintf('%s_Mag_Std', sensorType);
+    featureNames{end+1} = sprintf('%s_Mag_Energy', sensorType);
 end
 

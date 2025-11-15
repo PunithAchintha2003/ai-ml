@@ -1,4 +1,4 @@
-# Acceleration-Based Continuous User Authentication using Neural Networks
+# Behavioral Biometrics User Authentication - Complete Experimental Setup
 
 **Course:** PUSL3123 – AI and Machine Learning  
 **Project Type:** Coursework Submission  
@@ -6,9 +6,35 @@
 
 ---
 
+## 🎯 NEW: Complete Experimental Setup Implementation
+
+This project now implements a **comprehensive experimental setup** with:
+
+- ✅ **3 Testing Scenarios** (Train/Test configurations)
+- ✅ **3 Modalities** (Accelerometer, Gyroscope, Combined)
+- ✅ **Complete Evaluation** (FAR, FRR, EER for all combinations)
+- ✅ **9 Total Experiments** (3 scenarios × 3 modalities)
+
+### 🚀 Quick Start - Run All Experiments
+
+```matlab
+>> run_experiments
+```
+
+This single command will:
+1. Preprocess data (Day 1 and Day 2 separation)
+2. Extract features for all modalities
+3. Train and test all 9 configurations
+4. Compute FAR, FRR, EER for each
+5. Generate comprehensive comparison tables
+
+**See `README_EXPERIMENTS.md` for detailed instructions**
+
+---
+
 ## 📋 Project Overview
 
-This project implements a **continuous user authentication system** using accelerometer data from smart devices. By analyzing unique patterns in how individuals walk and move, the system can identify users through behavioral biometrics. A Multi-Layer Perceptron (MLP) neural network is trained to classify user identity based on extracted motion features.
+This project implements a **behavioral biometrics authentication system** using accelerometer and gyroscope data from smart devices. By analyzing unique patterns in how individuals walk and move, the system can identify users through behavioral biometrics. A Multi-Layer Perceptron (MLP) neural network is trained to classify user identity based on extracted motion features.
 
 ### 🏆 Project Results
 
@@ -37,31 +63,40 @@ This project implements a **continuous user authentication system** using accele
 
 ```
 ai-ml/
-├── Dataset/                    # Raw accelerometer CSV files
-│   ├── U1NW_FD.csv
-│   ├── U1NW_MD.csv
-│   └── ... (U2-U10)
+├── Dataset/                           # Raw sensor CSV files
+│   ├── U1NW_FD.csv                   # User 1, Day 1 (First Day)
+│   ├── U1NW_MD.csv                   # User 1, Day 2 (More Day)
+│   └── ... (U2-U10, 20 files total)
 │
-├── results/                    # Generated outputs (created automatically)
-│   ├── preprocessed.mat
-│   ├── featuresTable.mat
-│   ├── baseline_model.mat
-│   ├── evalResults.mat
-│   ├── optResults.mat
-│   ├── PCA_scatter.png
-│   ├── feature_boxplots.png
-│   ├── confusion_matrix.png
-│   ├── FAR_FRR_curve.png
-│   └── TAR_vs_FAR.png
+├── results/                           # Generated outputs (auto-created)
+│   ├── preprocessed.mat              # Day 1/Day 2 separated data
+│   ├── features_day1_accel.mat       # Accelerometer features (Day 1)
+│   ├── features_day1_gyro.mat        # Gyroscope features (Day 1)
+│   ├── features_day1_combined.mat    # Combined features (Day 1)
+│   ├── features_day2_*.mat           # Day 2 features (3 files)
+│   ├── model_scenario1_accel.mat     # Trained models (9 files)
+│   ├── all_experiments.mat           # Complete results
+│   ├── comparison_accuracy.png       # Comparison plots
+│   ├── comparison_eer.png
+│   ├── far_frr_scenario*.png         # FAR/FRR curves
+│   └── ... (more visualization files)
 │
-├── run_all.m                   # Main orchestration script
-├── preprocess_data.m           # Data cleaning and normalization
-├── extract_features.m          # Feature computation
-├── train_nn.m                  # Neural network training
-├── evaluate_model.m            # Performance evaluation
-├── optimize_model.m            # Feature selection & tuning
-├── helpers_variability_plot.m  # Visualization functions
-└── README.md                   # This file
+├── run_experiments.m                  # NEW: Main experimental setup
+├── train_test_scenario1.m             # NEW: Test 1 (Day 1 only)
+├── train_test_scenario2.m             # NEW: Test 2 (Day 1→2, realistic)
+├── train_test_scenario3.m             # NEW: Test 3 (Combined 70/30)
+├── evaluate_scenarios.m               # NEW: FAR/FRR/EER computation
+├── visualize_results.m                # NEW: Comprehensive plots
+├── preprocess_data.m                  # Updated: Day separation
+├── extract_features.m                 # Updated: Multi-modality
+├── run_all.m                          # Original baseline pipeline
+├── train_nn.m                         # Original baseline training
+├── evaluate_model.m                   # Original baseline evaluation
+├── optimize_model.m                   # Original optimization
+├── helpers_variability_plot.m         # Visualization helpers
+├── README.md                          # This file
+├── README_EXPERIMENTS.md              # NEW: Experimental setup guide
+└── EXPERIMENTAL_SETUP.md              # NEW: Detailed documentation
 ```
 
 ---
@@ -88,18 +123,36 @@ The `Dataset/` folder should contain accelerometer CSV files from multiple users
 
 ## 🚀 How to Run
 
-### Quick Start
+### Option 1: NEW Experimental Setup (RECOMMENDED)
 
-1. Open MATLAB and navigate to the project directory
-2. Ensure `Dataset/` folder contains the CSV files
-3. Run the main script:
+Run all three testing scenarios with all three modalities:
+
+```matlab
+>> run_experiments
+```
+
+This executes:
+- **3 Testing Scenarios:** Day 1 only, Day 1→Day 2, Combined
+- **3 Modalities:** Accelerometer, Gyroscope, Combined
+- **9 Total Experiments** with complete evaluation (FAR, FRR, EER)
+
+Then generate visualizations:
+
+```matlab
+>> visualize_results
+```
+
+**See `README_EXPERIMENTS.md` for detailed documentation**
+
+### Option 2: Original Baseline System
+
+Run the original single-scenario baseline:
 
 ```matlab
 >> run_all
 ```
 
-This will execute all 6 steps automatically:
-
+This executes the original 6-step pipeline:
 1. Preprocessing
 2. Feature Extraction
 3. Variability Analysis
@@ -109,15 +162,17 @@ This will execute all 6 steps automatically:
 
 ### Running Individual Steps
 
-You can also run each step independently:
-
 ```matlab
->> preprocess_data();              % Step 1
->> extract_features();             % Step 2
->> helpers_variability_plot();     % Step 3
->> train_nn();                     % Step 4
->> evaluate_model();               % Step 5
->> optimize_model();               % Step 6
+% New experimental setup
+>> preprocess_data();                    % Processes Day 1 and Day 2
+>> extract_features();                   % Extracts all modalities
+>> model = train_test_scenario1('accel'); % Run specific scenario
+>> evaluation = evaluate_scenarios(model); % Compute FAR/FRR/EER
+
+% Original baseline
+>> train_nn();                           % Train baseline model
+>> evaluate_model();                     % Evaluate with metrics
+>> optimize_model();                     % Feature selection
 ```
 
 ---
@@ -522,6 +577,50 @@ ROC-style curve showing True Acceptance Rate vs. False Acceptance Rate.
 
 ---
 
+## 🧪 NEW: Experimental Setup Details
+
+### Three Testing Scenarios
+
+#### Scenario 1: Train and Test on Day 1
+- **Configuration:** 70% train, 30% test from Day 1 only
+- **Purpose:** Best-case same-day performance
+- **Expected:** Highest accuracy (no temporal variation)
+
+#### Scenario 2: Train on Day 1, Test on Day 2 ⭐ MOST REALISTIC
+- **Configuration:** Train on all Day 1, test on all Day 2
+- **Purpose:** Real-world deployment (users don't retrain daily)
+- **Expected:** Some accuracy drop due to behavioral changes
+- **Key Insight:** Measures temporal stability and generalization
+
+#### Scenario 3: Combined 70/30 Split
+- **Configuration:** 70% train, 30% test from combined Day 1+2
+- **Purpose:** Maximum achievable performance
+- **Expected:** Upper bound with diverse training data
+
+### Three Modalities
+
+| Modality | Features | Pros | Cons |
+|----------|----------|------|------|
+| **Accelerometer Only** | 51 | Good gait capture, low cost | Less information |
+| **Gyroscope Only** | 51 | Rotational patterns | Weaker for walking |
+| **Combined** ⭐ | 102 | Best accuracy, most info | Higher cost |
+
+### Evaluation Metrics
+
+- **Accuracy:** % correctly identified users
+- **FAR (False Acceptance Rate):** % impostors accepted (security risk)
+- **FRR (False Rejection Rate):** % genuine users rejected (usability)
+- **EER (Equal Error Rate):** Point where FAR = FRR (primary metric)
+
+**EER Quality Scale:**
+- < 1%: Exceptional 🏆
+- 1-5%: Excellent (commercial-grade) ✅ **TARGET**
+- 5-10%: Good 👍
+- 10-20%: Fair ⚠️
+- \> 20%: Poor ❌
+
+---
+
 ## 🎓 Academic Submission Checklist
 
 - ✅ All code files properly commented
@@ -532,6 +631,10 @@ ROC-style curve showing True Acceptance Rate vs. False Acceptance Rate.
 - ✅ Privacy and ethical considerations discussed
 - ✅ Performance metrics clearly defined
 - ✅ Optimization approach explained
+- ✅ **NEW:** Three testing scenarios implemented
+- ✅ **NEW:** Three modalities tested and compared
+- ✅ **NEW:** FAR, FRR, EER computed for all configurations
+- ✅ **NEW:** Comprehensive visualizations generated
 
 ---
 
