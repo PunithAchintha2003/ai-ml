@@ -27,7 +27,17 @@ fprintf('============================================================\n\n');
 
 % Load all experimental results
 fprintf('Loading experimental results...\n');
-load('results/all_experiments.mat', 'allResults', 'allEvaluations', 'comparisonTable');
+
+% Check for optimized results first, then fallback to original
+if exist('results/all_experiments_optimized.mat', 'file')
+    fprintf('Found optimized results file\n');
+    load('results/all_experiments_optimized.mat', 'allResults', 'allEvaluations', 'comparisonTable');
+elseif exist('results/all_experiments.mat', 'file')
+    fprintf('Found original results file\n');
+    load('results/all_experiments.mat', 'allResults', 'allEvaluations', 'comparisonTable');
+else
+    error('No results file found. Please run run_experiments or run_experiments_optimized first.');
+end
 
 scenarios = {'scenario1', 'scenario2', 'scenario3'};
 scenarioNames = {'Test 1: Day 1', 'Test 2: Day 1→2 (Realistic)', 'Test 3: Combined'};
@@ -35,6 +45,23 @@ scenarioShort = {'Day 1', 'Day 1→2', 'Combined'};
 modalities = {'accel', 'gyro', 'combined'};
 modalityNames = {'Accelerometer', 'Gyroscope', 'Combined'};
 colors = [0.2, 0.4, 0.8; 0.8, 0.2, 0.2; 0.2, 0.8, 0.2];
+
+% Convert cell array format to struct format if needed (for optimized version)
+if iscell(allResults)
+    fprintf('Converting optimized results format...\n');
+    tempResults = struct();
+    tempEvaluations = struct();
+    for s = 1:length(scenarios)
+        for m = 1:length(modalities)
+            resultName = sprintf('%s_%s', scenarios{s}, modalities{m});
+            tempResults.(resultName) = allResults{s, m};
+            tempEvaluations.(resultName) = allEvaluations{s, m};
+        end
+    end
+    allResults = tempResults;
+    allEvaluations = tempEvaluations;
+    fprintf('Conversion complete\n');
+end
 
 %% Figure 1: Accuracy Comparison Across Scenarios and Modalities
 fprintf('Generating accuracy comparison plot...\n');
