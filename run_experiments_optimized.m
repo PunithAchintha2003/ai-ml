@@ -60,7 +60,14 @@ featuresExist = exist('results/features_day1_accel.mat', 'file') && ...
                 exist('results/features_day1_combined.mat', 'file');
 
 if ~featuresExist
-    extract_features();
+    % Use optimized version if available, fallback to original
+    if exist('extract_features_optimized.m', 'file')
+        extract_features_optimized();
+    elseif exist('extract_features.m', 'file')
+        extract_features();
+    else
+        error('No feature extraction function found!');
+    end
     fprintf('✓ Feature extraction complete\n');
 else
     fprintf('✓ Using existing feature files\n');
