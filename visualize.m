@@ -1,4 +1,4 @@
-%% VISUALIZE_RESULTS - Generate comprehensive visualizations for all experiments
+%% VISUALIZE - Generate comprehensive visualizations for all experiments
 % =========================================================================
 % This script creates professional visualizations comparing:
 %   - Performance across scenarios
@@ -7,7 +7,7 @@
 %   - EER comparison bar charts
 %   - Confusion matrices
 %
-% Run this after run_experiments.m completes
+% Run this after main.m completes
 %
 % Output:
 %   - results/comparison_accuracy.png

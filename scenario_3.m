@@ -1,12 +1,12 @@
-function results = train_test_scenario3_optimized(modality, config)
-%% TRAIN_TEST_SCENARIO3_OPTIMIZED - Test Scenario 3 (Optimized Version)
+function results = scenario_3(modality, cfg)
+%% SCENARIO_3 - Test Scenario 3: Combined data 70/30 split
 % =========================================================================
 % Combined data scenario - maximum performance benchmark.
 % Optimized version using unified training function.
 %
 % Input:
 %   modality: 'accel', 'gyro', or 'combined'
-%   config: (optional) configuration struct
+%   cfg: (optional) configuration struct
 %
 % Output:
 %   results: struct containing trained model, predictions, and test data
@@ -22,9 +22,12 @@ function results = train_test_scenario3_optimized(modality, config)
 %   - Better maintainability
 % =========================================================================
 
+    % Add utils to path
+    addpath('utils');
+    
     %% Load configuration
-    if nargin < 2 || isempty(config)
-        config = load_config();
+    if nargin < 2 || isempty(cfg)
+        cfg = config();
     end
     
     fprintf('\n========================================================\n');
@@ -33,8 +36,8 @@ function results = train_test_scenario3_optimized(modality, config)
     fprintf('========================================================\n');
     
     %% Load and combine features from both days
-    [X_day1, y_day1] = load_features_for_modality(modality, 1);
-    [X_day2, y_day2] = load_features_for_modality(modality, 2);
+    [X_day1, y_day1] = load_features(modality, 1);
+    [X_day2, y_day2] = load_features(modality, 2);
     
     % Combine datasets
     X = [X_day1; X_day2];
@@ -46,10 +49,10 @@ function results = train_test_scenario3_optimized(modality, config)
     
     %% Stratified Train/Test Split
     fprintf('\nSplitting combined data (%.0f%% train / %.0f%% test)...\n', ...
-        config.scenarioSplitRatio*100, (1-config.scenarioSplitRatio)*100);
+        cfg.scenarioSplitRatio*100, (1-cfg.scenarioSplitRatio)*100);
     
-    rng(config.randomSeed);
-    cv = cvpartition(y, 'HoldOut', 1 - config.scenarioSplitRatio);
+    rng(cfg.randomSeed);
+    cv = cvpartition(y, 'HoldOut', 1 - cfg.scenarioSplitRatio);
     
     X_train = X(training(cv), :);
     y_train = y(training(cv));
@@ -60,7 +63,7 @@ function results = train_test_scenario3_optimized(modality, config)
     fprintf('Testing samples: %d\n', size(X_test, 1));
     
     %% Train using unified function
-    results = train_unified(X_train, y_train, X_test, y_test, 3, modality, config);
+    results = train(X_train, y_train, X_test, y_test, 3, modality, cfg);
     
     fprintf('\n--- Scenario 3 Summary ---\n');
     fprintf('Training accuracy: %.2f%%\n', results.trainAccuracy);

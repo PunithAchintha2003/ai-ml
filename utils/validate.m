@@ -1,5 +1,5 @@
-function validate_modality(modality)
-%% VALIDATE_MODALITY - Validate modality string
+function validate(modality)
+%% VALIDATE - Validate modality string
 % Input:
 %   modality: string to validate
 % Throws error if invalid

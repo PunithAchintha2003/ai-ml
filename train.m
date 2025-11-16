@@ -1,5 +1,5 @@
-function results = train_unified(X_train, y_train, X_test, y_test, scenario, modality, config)
-%% TRAIN_UNIFIED - Unified training function for all scenarios
+function results = train(X_train, y_train, X_test, y_test, scenario, modality, cfg)
+%% TRAIN - Unified training function for all scenarios
 % =========================================================================
 % This function consolidates the training logic for all three scenarios,
 % eliminating code duplication and providing a single source of truth.
@@ -24,8 +24,8 @@ function results = train_unified(X_train, y_train, X_test, y_test, scenario, mod
 % =========================================================================
 
     %% Handle configuration
-    if nargin < 7 || isempty(config)
-        config = load_config();
+    if nargin < 7 || isempty(cfg)
+        cfg = config();
     end
     
     fprintf('\n========================================================\n');
@@ -59,21 +59,21 @@ function results = train_unified(X_train, y_train, X_test, y_test, scenario, mod
     %% Build and Train Neural Network
     fprintf('\nBuilding neural network...\n');
     fprintf('  Architecture: [%d] -> %s -> [%d]\n', ...
-        size(X_train_norm, 2), mat2str(config.hiddenLayers), numClasses);
+        size(X_train_norm, 2), mat2str(cfg.hiddenLayers), numClasses);
     
-    net = patternnet(config.hiddenLayers, config.trainingAlgorithm);
+    net = patternnet(cfg.hiddenLayers, cfg.trainingAlgorithm);
     
     % Configure training from config
-    net.trainParam.epochs = config.epochs;
-    net.trainParam.showWindow = config.showWindow;
-    net.trainParam.showCommandLine = config.showCommandLine;
-    net.divideParam.trainRatio = config.trainRatio;
-    net.divideParam.valRatio = config.valRatio;
-    net.divideParam.testRatio = config.testRatio;
-    net.performFcn = config.performFcn;
+    net.trainParam.epochs = cfg.epochs;
+    net.trainParam.showWindow = cfg.showWindow;
+    net.trainParam.showCommandLine = cfg.showCommandLine;
+    net.divideParam.trainRatio = cfg.trainRatio;
+    net.divideParam.valRatio = cfg.valRatio;
+    net.divideParam.testRatio = cfg.testRatio;
+    net.performFcn = cfg.performFcn;
     
     % Optional: Enable GPU acceleration if available
-    if config.useGPU && canUseGPU()
+    if cfg.useGPU && canUseGPU()
         fprintf('  Using GPU acceleration\n');
         X_train_norm = gpuArray(X_train_norm);
     end
@@ -100,7 +100,7 @@ function results = train_unified(X_train, y_train, X_test, y_test, scenario, mod
     
     %% Evaluate on Test Data
     % Convert back from GPU if needed
-    if config.useGPU && canUseGPU()
+    if cfg.useGPU && canUseGPU()
         X_test_norm = gather(X_test_norm);
     end
     
@@ -137,7 +137,7 @@ function results = train_unified(X_train, y_train, X_test, y_test, scenario, mod
     results.testAccuracy = testAccuracy;
     results.perUserAccuracy = perUserAcc;
     results.trainTime = trainTime;
-    results.config = config;
+    results.config = cfg;
     
     % Test data for evaluation
     results.X_test_norm = X_test_norm;

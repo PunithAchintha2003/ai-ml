@@ -1,5 +1,5 @@
-function check_dependencies()
-%% CHECK_DEPENDENCIES - Verify required toolboxes are installed
+function check_deps()
+%% CHECK_DEPS - Verify required toolboxes are installed
 
     fprintf('Checking MATLAB toolbox dependencies...\n');
     

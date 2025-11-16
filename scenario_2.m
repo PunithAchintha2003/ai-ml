@@ -1,12 +1,12 @@
-function results = train_test_scenario2_optimized(modality, config)
-%% TRAIN_TEST_SCENARIO2_OPTIMIZED - Test Scenario 2 (Optimized Version)
+function results = scenario_2(modality, cfg)
+%% SCENARIO_2 - Test Scenario 2: Train Day 1, Test Day 2 (Realistic)
 % =========================================================================
 % MOST REALISTIC scenario - train on Day 1, test on Day 2.
 % Optimized version using unified training function.
 %
 % Input:
 %   modality: 'accel', 'gyro', or 'combined'
-%   config: (optional) configuration struct
+%   cfg: (optional) configuration struct
 %
 % Output:
 %   results: struct containing trained model, predictions, and test data
@@ -22,9 +22,12 @@ function results = train_test_scenario2_optimized(modality, config)
 %   - ~70% less code
 % =========================================================================
 
+    % Add utils to path
+    addpath('utils');
+    
     %% Load configuration
-    if nargin < 2 || isempty(config)
-        config = load_config();
+    if nargin < 2 || isempty(cfg)
+        cfg = config();
     end
     
     fprintf('\n========================================================\n');
@@ -33,8 +36,8 @@ function results = train_test_scenario2_optimized(modality, config)
     fprintf('========================================================\n');
     
     %% Load features for both days
-    [X_train, y_train] = load_features_for_modality(modality, 1);
-    [X_test, y_test] = load_features_for_modality(modality, 2);
+    [X_train, y_train] = load_features(modality, 1);
+    [X_test, y_test] = load_features(modality, 2);
     
     fprintf('Training samples (Day 1): %d\n', size(X_train, 1));
     fprintf('Testing samples (Day 2): %d\n', size(X_test, 1));
@@ -42,7 +45,7 @@ function results = train_test_scenario2_optimized(modality, config)
     fprintf('Number of users: %d\n', length(unique(y_train)));
     
     %% Train using unified function
-    results = train_unified(X_train, y_train, X_test, y_test, 2, modality, config);
+    results = train(X_train, y_train, X_test, y_test, 2, modality, cfg);
     
     fprintf('\n--- Scenario 2 Summary ---\n');
     fprintf('Training accuracy (Day 1): %.2f%%\n', results.trainAccuracy);

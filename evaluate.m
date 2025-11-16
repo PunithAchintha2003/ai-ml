@@ -1,5 +1,5 @@
-function evalResults = evaluate_scenarios(trainedModel)
-%% EVALUATE_SCENARIOS - Compute FAR, FRR, and EER for trained model
+function evalResults = evaluate(trainedModel)
+%% EVALUATE - Compute FAR, FRR, and EER for trained model
 % =========================================================================
 % This function evaluates a trained model from any scenario using biometric
 % authentication metrics: False Acceptance Rate (FAR), False Rejection Rate

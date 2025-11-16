@@ -1,5 +1,5 @@
-function [X, y] = load_features_for_modality(modality, day)
-%% LOAD_FEATURES_FOR_MODALITY - Load feature matrix for given modality and day
+function [X, y] = load_features(modality, day)
+%% LOAD_FEATURES - Load feature matrix for given modality and day
 % Input:
 %   modality: 'accel', 'gyro', or 'combined'
 %   day: 1 or 2
@@ -8,7 +8,7 @@ function [X, y] = load_features_for_modality(modality, day)
 %   y: Labels
 
     % Validate inputs
-    validate_modality(modality);
+    validate(modality);
     if ~ismember(day, [1, 2])
         error('Day must be 1 or 2');
     end

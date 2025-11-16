@@ -28,16 +28,19 @@
 
 clear all; close all; clc;
 
+% Add utils folder to path
+addpath('utils');
+
 fprintf('════════════════════════════════════════════════════════\n');
 fprintf('BEHAVIORAL BIOMETRICS - OPTIMIZED EXPERIMENTAL SETUP\n');
 fprintf('════════════════════════════════════════════════════════\n\n');
 
 %% Load configuration
-config = load_config();
-create_results_dir(config);
+cfg = config();
+create_dir(cfg);
 
 % Check dependencies
-check_dependencies();
+check_deps();
 
 % Start timer
 tic;
@@ -46,7 +49,7 @@ tic;
 fprintf('\n[STEP 1/4] Preprocessing sensor data...\n');
 fprintf('------------------------------------------------------------\n');
 if ~exist('results/preprocessed.mat', 'file')
-    preprocess_data();
+    preprocess();
     fprintf('✓ Preprocessing complete\n');
 else
     fprintf('✓ Using existing preprocessed data\n');
@@ -60,14 +63,7 @@ featuresExist = exist('results/features_day1_accel.mat', 'file') && ...
                 exist('results/features_day1_combined.mat', 'file');
 
 if ~featuresExist
-    % Use optimized version if available, fallback to original
-    if exist('extract_features_optimized.m', 'file')
-        extract_features_optimized();
-    elseif exist('extract_features.m', 'file')
-        extract_features();
-    else
-        error('No feature extraction function found!');
-    end
+    extract_features();
     fprintf('✓ Feature extraction complete\n');
 else
     fprintf('✓ Using existing feature files\n');
@@ -91,7 +87,7 @@ allEvaluations = cell(length(scenarios), length(modalities));
 totalExperiments = length(scenarios) * length(modalities);
 
 %% Run experiments (with optional parallel processing)
-if config.useParallel
+if cfg.useParallel
     % Check if Parallel Computing Toolbox is available
     if license('test', 'distrib_computing_toolbox')
         fprintf('Using parallel processing (this may take a moment to initialize)...\n');
@@ -100,7 +96,7 @@ if config.useParallel
         try
             pool = gcp('nocreate');
             if isempty(pool)
-                numWorkers = config.numWorkers;
+                numWorkers = cfg.numWorkers;
                 if numWorkers == 0
                     numWorkers = feature('numcores');
                 end
@@ -110,7 +106,7 @@ if config.useParallel
                 catch ME
                     fprintf('⚠ Could not initialize parallel pool: %s\n', ME.message);
                     fprintf('⚠ Using sequential execution instead\n');
-                    config.useParallel = false;
+                    cfg.useParallel = false;
                 end
             else
                 fprintf('✓ Using existing parallel pool with %d workers\n', pool.NumWorkers);
@@ -118,16 +114,16 @@ if config.useParallel
         catch ME
             fprintf('⚠ Parallel processing error: %s\n', ME.message);
             fprintf('⚠ Using sequential execution instead\n');
-            config.useParallel = false;
+            cfg.useParallel = false;
         end
     else
         fprintf('⚠ Parallel Computing Toolbox not available\n');
         fprintf('⚠ Using sequential execution instead\n');
-        config.useParallel = false;
+        cfg.useParallel = false;
     end
 end
 
-if ~config.useParallel
+if ~cfg.useParallel
     fprintf('Using sequential processing (no parallelization)...\n');
 end
 
@@ -148,15 +144,15 @@ for s = 1:length(scenarios)
             % Run scenario using optimized functions
             switch scenarios(s)
                 case 1
-                    model = train_test_scenario1_optimized(modalities{m}, config);
+                    model = scenario_1(modalities{m}, cfg);
                 case 2
-                    model = train_test_scenario2_optimized(modalities{m}, config);
+                    model = scenario_2(modalities{m}, cfg);
                 case 3
-                    model = train_test_scenario3_optimized(modalities{m}, config);
+                    model = scenario_3(modalities{m}, cfg);
             end
             
             % Evaluate model
-            evaluation = evaluate_scenarios(model);
+            evaluation = evaluate(model);
             
             % Store results
             allResults{s, m} = model;
@@ -333,7 +329,7 @@ end
 
 %% Save all results
 save('results/all_experiments_optimized.mat', 'allResults', 'allEvaluations', ...
-     'comparisonTable', 'config');
+     'comparisonTable', 'cfg');
 fprintf('\n✓ All results saved to results/all_experiments_optimized.mat\n');
 
 %% Summary
@@ -345,7 +341,7 @@ fprintf('Total experiments run: %d\n', totalExperiments);
 fprintf('Total execution time: %s\n', format_time(totalTime));
 fprintf('Average time per experiment: %.2f seconds\n', totalTime/totalExperiments);
 
-if config.useParallel
+if cfg.useParallel
     fprintf('Parallel processing: ENABLED\n');
 else
     fprintf('Parallel processing: DISABLED\n');

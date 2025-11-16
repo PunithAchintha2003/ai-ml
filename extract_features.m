@@ -1,5 +1,5 @@
-function extract_features_optimized()
-%% EXTRACT_FEATURES_OPTIMIZED - Optimized feature extraction with vectorization
+function extract_features()
+%% EXTRACT_FEATURES - Optimized feature extraction with vectorization
 % =========================================================================
 % This optimized version includes:
 %   ✓ Vectorized operations where possible
@@ -23,15 +23,15 @@ function extract_features_optimized()
 % Total Features: 51 per sensor, 102 for combined
 % =========================================================================
 
-    config = load_config();
+    cfg = config();
     
     fprintf('Loading preprocessed data...\n');
     load('results/preprocessed.mat', 'day1_accel', 'day1_gyro', 'day2_accel', 'day2_gyro', ...
          'userLabels_day1', 'userLabels_day2', 'samplingRate');
     
     % Window parameters from config
-    windowSize = config.windowSize; % seconds
-    overlap = config.overlap; % 50% overlap
+    windowSize = cfg.windowSize; % seconds
+    overlap = cfg.overlap; % 50% overlap
     windowSamples = round(windowSize * samplingRate);
     stepSamples = round(windowSamples * (1 - overlap));
     
