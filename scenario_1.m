@@ -25,7 +25,7 @@ function results = scenario_1(modality, cfg)
 
     % Add utils to path
     addpath('utils');
-    
+
     %% Load configuration
     if nargin < 2 || isempty(cfg)
         cfg = config();

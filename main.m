@@ -31,9 +31,9 @@ clear all; close all; clc;
 % Add utils folder to path
 addpath('utils');
 
-fprintf('════════════════════════════════════════════════════════\n');
-fprintf('BEHAVIORAL BIOMETRICS - OPTIMIZED EXPERIMENTAL SETUP\n');
-fprintf('════════════════════════════════════════════════════════\n\n');
+
+fprintf('BEHAVIORAL BIOMETRICS SETUP\n');
+fprintf('------------------------------------------------------------\n');
 
 %% Load configuration
 cfg = config();
@@ -63,7 +63,7 @@ featuresExist = exist('results/features_day1_accel.mat', 'file') && ...
                 exist('results/features_day1_combined.mat', 'file');
 
 if ~featuresExist
-    extract_features();
+        extract_features();
     fprintf('✓ Feature extraction complete\n');
 else
     fprintf('✓ Using existing feature files\n');
@@ -361,10 +361,7 @@ fprintf('  → Test 3 (Combined) provides upper bound on performance\n');
 fprintf('════════════════════════════════════════════════════════\n\n');
 
 fprintf('NEXT STEPS:\n');
-fprintf('1. Review comparison table above\n');
-fprintf('2. Run visualize_results.m to generate plots\n');
-fprintf('3. Include results in your report with discussion\n');
-fprintf('4. Compare optimized vs original performance\n\n');
+fprintf('Run visualize.m to generate plots\n');
 
 % Performance comparison with original
 if exist('results/all_experiments.mat', 'file')
