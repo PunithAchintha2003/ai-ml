@@ -100,8 +100,8 @@ if cfg.useParallel
             cfg.useParallel = false;
         end
     else
-        fprintf('⚠ Parallel Computing Toolbox not available\n');
-        fprintf('⚠ Using sequential execution instead\n');
+        fprintf('! Parallel Computing Toolbox not available\n');
+        fprintf('! Using sequential execution instead\n');
         cfg.useParallel = false;
     end
 end
