@@ -87,16 +87,16 @@ if cfg.useParallel
                     parpool('local', numWorkers);
                     fprintf('✓ Parallel pool initialized with %d workers\n', numWorkers);
                 catch ME
-                    fprintf('⚠ Could not initialize parallel pool: %s\n', ME.message);
-                    fprintf('⚠ Using sequential execution instead\n');
+                    fprintf('! Could not initialize parallel pool: %s\n', ME.message);
+                    fprintf('! Using sequential execution instead\n');
                     cfg.useParallel = false;
                 end
             else
                 fprintf('✓ Using existing parallel pool with %d workers\n', pool.NumWorkers);
             end
         catch ME
-            fprintf('⚠ Parallel processing error: %s\n', ME.message);
-            fprintf('⚠ Using sequential execution instead\n');
+            fprintf('! Parallel processing error: %s\n', ME.message);
+            fprintf('! Using sequential execution instead\n');
             cfg.useParallel = false;
         end
     else
