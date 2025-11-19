@@ -4,12 +4,6 @@ function cfg = config()
 % This function provides a single source of truth for all hyperparameters
 % and configuration settings used throughout the project.
 %
-% Benefits:
-%   - Easy to modify parameters in one place
-%   - Consistent settings across all experiments
-%   - Better documentation of choices
-%   - Facilitates hyperparameter tuning
-%
 % Output:
 %   cfg: struct containing all configuration parameters
 %

@@ -40,7 +40,7 @@ else
 end
 
 scenarios = {'scenario1', 'scenario2', 'scenario3'};
-scenarioNames = {'Test 1: Day 1', 'Test 2: Day 1→2 (Realistic)', 'Test 3: Combined'};
+scenarioNames = {'Test 1: Day 1', 'Test 2: Day 1→2', 'Test 3: Combined'};
 scenarioShort = {'Day 1', 'Day 1→2', 'Combined'};
 modalities = {'accel', 'gyro', 'combined'};
 modalityNames = {'Accelerometer', 'Gyroscope', 'Combined'};
@@ -371,13 +371,4 @@ fprintf('  6. modality_comparison.png - Comprehensive modality analysis\n');
 fprintf('  7. confusion_matrices_scenario2.png - Confusion matrices\n');
 fprintf('  8. performance_degradation.png - Day-to-day stability\n');
 fprintf('  9. tar_far_all.png - ROC-style curves for all\n');
-fprintf('\nAll visualizations saved to results/ folder\n');
-fprintf('============================================================\n\n');
-
-fprintf('REPORT RECOMMENDATIONS:\n');
-fprintf('→ Include comparison_accuracy.png and comparison_eer.png in results section\n');
-fprintf('→ Use far_frr_scenario2.png to discuss most realistic scenario\n');
-fprintf('→ Include modality_comparison.png to justify sensor choice\n');
-fprintf('→ Use performance_degradation.png to discuss temporal stability\n');
-fprintf('→ Include confusion_matrices_scenario2.png for per-user analysis\n\n');
 

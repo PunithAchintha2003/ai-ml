@@ -1,8 +1,7 @@
 function results = scenario_1(modality, cfg)
 %% SCENARIO_1 - Test Scenario 1: Train and test on Day 1
 % =========================================================================
-% This is the optimized version that uses the unified training function,
-% reducing code duplication by ~70% and improving maintainability.
+% This is unified training function
 %
 % Input:
 %   modality: 'accel', 'gyro', or 'combined'
@@ -15,12 +14,6 @@ function results = scenario_1(modality, cfg)
 %   - Training: Random 70% of Day 1 data
 %   - Testing: Remaining 30% of Day 1 data
 %   - Stratified split to maintain class balance
-%
-% Improvements over original:
-%   - Uses unified training function (single source of truth)
-%   - Leverages centralized configuration
-%   - Better error handling
-%   - ~70% less code
 % =========================================================================
 
     % Add utils to path

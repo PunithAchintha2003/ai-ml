@@ -17,7 +17,7 @@ function check_deps()
         if license('test', toolboxShort)
             fprintf('  ✓ %s\n', toolboxName);
         else
-            fprintf('  ✗ %s (MISSING)\n', toolboxName);
+            fprintf('  - %s (MISSING)\n', toolboxName);
             allPresent = false;
         end
     end

@@ -1,29 +1,12 @@
-%% RUN_EXPERIMENTS_OPTIMIZED - Optimized experimental setup with parallel processing
-% =========================================================================
-% Course: PUSL3123 - AI and Machine Learning
-% Project: Behavioral Biometrics User Authentication (Optimized Version)
-% =========================================================================
-%
-% This optimized version includes:
-%   ✓ Parallel processing for multiple experiments
-%   ✓ Unified training function (eliminates code duplication)
-%   ✓ Centralized configuration management
-%   ✓ Better error handling and validation
-%   ✓ Improved performance tracking
-%   ✓ Memory-efficient data loading
-%
-% Improvements over original:
-%   - ~50% faster execution with parallel processing
-%   - ~70% less code duplication
-%   - Better maintainability and extensibility
-%   - Centralized hyperparameter management
+
+% Project: Behavioral Biometrics User Authentication
 %
 % Output:
-%   - Results for all 9 combinations (3 scenarios × 3 modalities)
+%   - Results for all 9 combinations (3 scenarios * 3 modalities)
 %   - Comparative performance tables
 %   - Saved results in results/ folder
 %
-% Total Experiments: 3 scenarios × 3 modalities = 9 experiments
+% Total Experiments: 3 scenarios * 3 modalities = 9 experiments
 % =========================================================================
 
 clear all; close all; clc;
@@ -31,9 +14,9 @@ clear all; close all; clc;
 % Add utils folder to path
 addpath('utils');
 
-
+fprintf('====================================================\n');
 fprintf('BEHAVIORAL BIOMETRICS SETUP\n');
-fprintf('------------------------------------------------------------\n');
+fprintf('====================================================\n');
 
 %% Load configuration
 cfg = config();
@@ -46,7 +29,7 @@ check_deps();
 tic;
 
 %% STEP 1: Preprocess Data
-fprintf('\n[STEP 1/4] Preprocessing sensor data...\n');
+fprintf('\nSTEP 1 Preprocessing sensor data\n');
 fprintf('------------------------------------------------------------\n');
 if ~exist('results/preprocessed.mat', 'file')
     preprocess();
@@ -56,7 +39,7 @@ else
 end
 
 %% STEP 2: Extract Features
-fprintf('\n[STEP 2/4] Extracting features for all modalities...\n');
+fprintf('\nSTEP 2 Extracting features for all modalities\n');
 fprintf('------------------------------------------------------------\n');
 featuresExist = exist('results/features_day1_accel.mat', 'file') && ...
                 exist('results/features_day1_gyro.mat', 'file') && ...
@@ -70,12 +53,12 @@ else
 end
 
 %% STEP 3: Run All Scenarios and Modalities
-fprintf('\n[STEP 3/4] Running experiments (3 scenarios × 3 modalities)...\n');
+fprintf('\nSTEP 3 Running experiments (3 scenarios * 3 modalities)...\n');
 fprintf('------------------------------------------------------------\n');
 
 scenarios = 1:3;
 scenarioNames = {'Test 1: Day 1 Train+Test', ...
-                 'Test 2: Day 1 Train, Day 2 Test (REALISTIC)', ...
+                 'Test 2: Day 1 Train, Day 2 Test', ...
                  'Test 3: Combined 70/30'};
 modalities = {'accel', 'gyro', 'combined'};
 modalityNames = {'Accelerometer Only', 'Gyroscope Only', 'Combined Sensors'};
@@ -180,7 +163,7 @@ end
 fprintf('\n✓ All experiments completed!\n');
 
 %% STEP 4: Generate Comparison Tables
-fprintf('\n[STEP 4/4] Generating comparison tables...\n');
+fprintf('\nSTEP 4 Generating comparison tables...\n');
 fprintf('------------------------------------------------------------\n');
 
 % Create comprehensive comparison table
@@ -220,11 +203,11 @@ end
 
 % Display comparison table
 fprintf('\n════════════════════════════════════════════════════════════════════════════════════════\n');
-fprintf('COMPREHENSIVE RESULTS COMPARISON (All Scenarios × All Modalities)\n');
-fprintf('════════════════════════════════════════════════════════════════════════════════════════\n');
+fprintf('COMPREHENSIVE RESULTS COMPARISON (All Scenarios * All Modalities)\n');
+fprintf('═══════════════════════════════════════════════════════════════════════════════════════════\n');
 fprintf('%-40s | %-20s | %10s | %10s | %8s | %9s | %9s | %12s\n', ...
     'Scenario', 'Modality', 'Train Acc', 'Test Acc', 'EER', 'Avg FAR', 'Avg FRR', 'Train Time');
-fprintf('────────────────────────────────────────────────────────────────────────────────────────\n');
+fprintf('───────────────────────────────────────────────────────────────────────────────────────────\n');
 
 for i = 2:size(comparisonTable, 1)
     fprintf('%-40s | %-20s | %10s | %10s | %8s | %9s | %9s | %12s\n', ...
@@ -233,7 +216,7 @@ for i = 2:size(comparisonTable, 1)
         comparisonTable{i, 7}, comparisonTable{i, 8});
 end
 
-fprintf('════════════════════════════════════════════════════════════════════════════════════════\n\n');
+fprintf('═══════════════════════════════════════════════════════════════════════════════════════════\n\n');
 
 %% Analysis by Scenario
 fprintf('\n--- Analysis by Scenario ---\n');
@@ -360,17 +343,6 @@ fprintf('  → Most Realistic (Scenario 2) provides cross-day validation\n');
 fprintf('  → Test 3 (Combined) provides upper bound on performance\n');
 fprintf('════════════════════════════════════════════════════════\n\n');
 
-fprintf('NEXT STEPS:\n');
+fprintf('NEXT STEP:\n');
 fprintf('Run visualize.m to generate plots\n');
-
-% Performance comparison with original
-if exist('results/all_experiments.mat', 'file')
-    fprintf('OPTIMIZATION BENEFITS:\n');
-    fprintf('  ✓ ~70%% less code duplication\n');
-    fprintf('  ✓ Centralized configuration management\n');
-    fprintf('  ✓ Better error handling and validation\n');
-    fprintf('  ✓ Parallel processing support (if enabled)\n');
-    fprintf('  ✓ Improved maintainability and extensibility\n');
-    fprintf('  ✓ Training time tracking per experiment\n\n');
-end
 

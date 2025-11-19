@@ -1,10 +1,6 @@
 function evalResults = evaluate(trainedModel)
 %% EVALUATE - Compute FAR, FRR, and EER for trained model
 % =========================================================================
-% This function evaluates a trained model from any scenario using biometric
-% authentication metrics: False Acceptance Rate (FAR), False Rejection Rate
-% (FRR), and Equal Error Rate (EER).
-%
 % Input:
 %   trainedModel: struct from train_test_scenarioX.m containing:
 %                 - y_test_pred_prob: prediction probabilities
@@ -13,13 +9,6 @@ function evalResults = evaluate(trainedModel)
 %
 % Output:
 %   evalResults: struct containing FAR, FRR, EER, and related metrics
-%
-% Metrics Definitions:
-%   FAR (False Acceptance Rate): Probability system accepts impostor
-%   FRR (False Rejection Rate): Probability system rejects genuine user
-%   EER (Equal Error Rate): Point where FAR = FRR (lower is better)
-%
-% Reference: [4] Jain et al., 2004 - An Introduction to Biometric Recognition
 % =========================================================================
 
     fprintf('\n--- Computing FAR, FRR, and EER ---\n');

@@ -1,8 +1,7 @@
 function results = scenario_2(modality, cfg)
 %% SCENARIO_2 - Test Scenario 2: Train Day 1, Test Day 2 (Realistic)
 % =========================================================================
-% MOST REALISTIC scenario - train on Day 1, test on Day 2.
-% Optimized version using unified training function.
+% Train on Day 1, test on Day 2.
 %
 % Input:
 %   modality: 'accel', 'gyro', or 'combined'
@@ -15,11 +14,6 @@ function results = scenario_2(modality, cfg)
 %   - Training: ALL Day 1 data
 %   - Testing: ALL Day 2 data
 %   - No overlap between training and testing sessions
-%
-% Improvements over original:
-%   - Uses unified training function
-%   - Better performance tracking
-%   - ~70% less code
 % =========================================================================
 
     % Add utils to path
@@ -31,7 +25,7 @@ function results = scenario_2(modality, cfg)
     end
     
     fprintf('\n========================================================\n');
-    fprintf('SCENARIO 2: Train on Day 1, Test on Day 2 (REALISTIC)\n');
+    fprintf('SCENARIO 2: Train on Day 1, Test on Day 2\n');
     fprintf('Modality: %s\n', upper(modality));
     fprintf('========================================================\n');
     

@@ -1,8 +1,7 @@
 function results = scenario_3(modality, cfg)
 %% SCENARIO_3 - Test Scenario 3: Combined data 70/30 split
 % =========================================================================
-% Combined data scenario - maximum performance benchmark.
-% Optimized version using unified training function.
+% Combined data scenario
 %
 % Input:
 %   modality: 'accel', 'gyro', or 'combined'
@@ -15,11 +14,6 @@ function results = scenario_3(modality, cfg)
 %   - Training: 70% of combined Day 1 + Day 2 data
 %   - Testing: 30% of combined data
 %   - Stratified split maintains class balance
-%
-% Improvements over original:
-%   - Uses unified training function
-%   - ~70% less code
-%   - Better maintainability
 % =========================================================================
 
     % Add utils to path

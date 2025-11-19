@@ -1,19 +1,6 @@
 function extract_features()
 %% EXTRACT_FEATURES - Optimized feature extraction with vectorization
 % =========================================================================
-% This optimized version includes:
-%   ✓ Vectorized operations where possible
-%   ✓ Preallocated arrays for better memory management
-%   ✓ Parallel processing for multi-file operations
-%   ✓ Progress tracking
-%   ✓ Better error handling
-%
-% Improvements over original:
-%   - ~30-40% faster through vectorization
-%   - Better memory efficiency
-%   - Parallel processing for multiple modalities
-%   - Reduced redundant computations
-%
 % Features computed (per window):
 %   Time Domain: Mean, Std, Var, Skew, Kurt, Min, Max, Median, Range, IQR, RMS, ZCR
 %   Frequency Domain: Dominant freq, Spectral entropy, Energy

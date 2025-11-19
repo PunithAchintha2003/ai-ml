@@ -5,7 +5,7 @@ function preprocess_data()
 % both accelerometer and gyroscope readings, and separates Day 1 and Day 2 data.
 %
 % Processing steps:
-%   1. Read all user CSV files (U1NW_FD.csv for Day 1, U1NW_MD.csv for Day 2)
+%   1. Read all user CSV files
 %   2. Extract accelerometer data (columns 2-4: x, y, z)
 %   3. Extract gyroscope data (columns 5-7: x, y, z)
 %   4. Handle missing values
@@ -22,8 +22,6 @@ function preprocess_data()
 %     * userLabels_day1: user IDs for Day 1
 %     * userLabels_day2: user IDs for Day 2
 %     * samplingRate: standardized sampling rate (30 Hz)
-%
-% Reference: [1] Kwapisz et al., 2011 - Activity Recognition using Cell Phone Accelerometers
 % =========================================================================
 
     fprintf('Reading raw sensor data from Dataset/ folder...\n');
@@ -54,7 +52,7 @@ function preprocess_data()
         filename = csvFiles(i).name;
         filepath = fullfile(dataPath, filename);
         
-        fprintf('  Processing: %s... ', filename);
+        fprintf('  Processing: %s ', filename);
         
         % Extract user ID from filename (e.g., U1NW_FD.csv -> user 1)
         userID = str2double(regexp(filename, '\d+', 'match', 'once'));

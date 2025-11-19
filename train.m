@@ -1,8 +1,7 @@
 function results = train(X_train, y_train, X_test, y_test, scenario, modality, cfg)
 %% TRAIN - Unified training function for all scenarios
 % =========================================================================
-% This function consolidates the training logic for all three scenarios,
-% eliminating code duplication and providing a single source of truth.
+% This function consolidates the training logic for all three scenarios
 %
 % Input:
 %   X_train: Training feature matrix
@@ -15,12 +14,6 @@ function results = train(X_train, y_train, X_test, y_test, scenario, modality, c
 %
 % Output:
 %   results: struct containing trained model, predictions, and metrics
-%
-% Benefits:
-%   - Single source of truth for training logic
-%   - Easier to maintain and update
-%   - Consistent behavior across all scenarios
-%   - Reduced code duplication by ~70%
 % =========================================================================
 
     %% Handle configuration
@@ -152,7 +145,7 @@ function results = train(X_train, y_train, X_test, y_test, scenario, modality, c
         results.degradation = degradation;
         fprintf('\nPerformance degradation (Day 1 → Day 2): %.2f%%\n', degradation);
         if degradation > 5
-            fprintf('⚠️  Significant behavioral change detected between days!\n');
+            fprintf(' Significant behavioral change detected between days!\n');
         else
             fprintf('✓ Behavior is stable across days\n');
         end
