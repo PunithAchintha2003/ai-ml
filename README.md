@@ -371,17 +371,13 @@ Output Layer: 10 neurons (Softmax activation)
 
 ## 🤝 Contributing
 
-This is an academic project for PUSL3123 - AI and Machine Learning. For improvements or bug fixes, please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Submit a pull request with detailed description
+This is an academic project for PUSL3123 - AI and Machine Learning. 
 
 ## 📄 License
 
 Academic coursework for **PUSL3123 - AI and Machine Learning**.
 
-This project is intended for educational purposes. Please respect academic integrity guidelines.
+This project is intended for educational purposes.
 
 ## 👤 Author
 
