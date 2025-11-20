@@ -371,7 +371,7 @@ Output Layer: 10 neurons (Softmax activation)
 
 ## 🤝 Contributing
 
-This is an academic project for PUSL3123 - AI and Machine Learning. 
+This is an academic project for PUSL3123 - AI and Machine Learning.
 
 ## 📄 License
 
@@ -379,7 +379,12 @@ Academic coursework for **PUSL3123 - AI and Machine Learning**.
 
 This project is intended for educational purposes.
 
-## 👤 Author
+## 👤 Authors
+
+- **Matara Hirimbura** - 10952357
+- **W P P Thenura** - 10952839
+- **M U I Jayaweera** - 10952852
+- **Thanthri Vidun** - 10952634
 
 **Course**: PUSL3123 - AI and Machine Learning  
 **Project**: Behavioral Biometrics User Authentication  
